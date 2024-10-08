@@ -1,3 +1,4 @@
+# Purpose: Define the variables that will be used in the Terraform configuration
 variable "aws_region" {
   description = "AWS region to deploy resources"
   default     = "us-east-1"

@@ -1,3 +1,4 @@
+# This file contains the main configuration of the infrastructure
 data "aws_availability_zones" "available" {
   state = "available"
 }
