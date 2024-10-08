@@ -1,3 +1,4 @@
+# Purpose: Create route tables and associate them with subnets
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.my_vpc.id
 

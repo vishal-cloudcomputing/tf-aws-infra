@@ -1,3 +1,4 @@
+# Purpose: Define the outputs for the VPC module
 output "vpc_id" {
   description = "ID of the VPC"
   value       = aws_vpc.my_vpc.id

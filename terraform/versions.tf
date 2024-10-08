@@ -1,3 +1,4 @@
+# Purpose: Define the required Terraform version and provider versions.
 terraform {
   required_version = ">= 1.9.0"
 
