@@ -19,8 +19,8 @@ Ensure the following tools are installed on your system:
 
    Clone the repository to your local machine:
    ```bash
-   git clone https://github.com/<your-repository-name>.git
-   cd <your-repository-name>
+   git clone https://github.com/vishal-cloudcomputing/tf-aws-infra.git
+   cd tf-aws-infra
    ```
 
 2. **Navigate to the Terraform Directory**
