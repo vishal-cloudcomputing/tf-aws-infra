@@ -27,6 +27,9 @@ resource "aws_subnet" "public_subnet" {
   tags = {
     Name = "${var.vpc_name}-public-${count.index + 1}"
   }
+  depends_on = [
+    aws_vpc.my_vpc,
+  ]
 }
 
 resource "aws_subnet" "private_subnet" {
@@ -38,4 +41,7 @@ resource "aws_subnet" "private_subnet" {
   tags = {
     Name = "${var.vpc_name}-private-${count.index + 1}"
   }
+  depends_on = [
+    aws_vpc.my_vpc,
+  ]
 }
