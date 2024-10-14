@@ -1,7 +1,7 @@
 name: Terraform CI
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - main
 
@@ -20,10 +20,10 @@ jobs:
           terraform_version: 1.9.0 
 
       - name: Terraform Init
-        run: terraform init ./terraform
+        run: terraform -chdir=terraform init
 
       - name: Terraform Format
-        run: terraform fmt -check -recursive ./terraform
+        run: terraform -chdir=terraform fmt -check -recursive
 
       - name: Terraform Validate
-        run: terraform validate ./terraform
+        run: terraform -chdir=terraform validate
