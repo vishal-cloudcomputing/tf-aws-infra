@@ -1,8 +1,8 @@
 # Purpose: Define the variables that will be used in the Terraform configuration
-variable "aws_region" {
-  description = "AWS region to deploy resources"
-  default     = "us-east-1"
-}
+# variable "aws_region" {
+#   description = "AWS region to deploy resources"
+#   default     = "us-east-1"
+# }
 
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
