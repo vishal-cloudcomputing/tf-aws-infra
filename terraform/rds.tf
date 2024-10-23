@@ -13,12 +13,12 @@ resource "aws_security_group" "database_sg" {
   }
 
   # No outbound traffic restrictions
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
+  #   egress {
+  #     from_port   = 0
+  #     to_port     = 0
+  #     protocol    = "-1"
+  #     cidr_blocks = ["0.0.0.0/0"]
+  #   }
 
   tags = {
     Name = "Postgres-RDS-Database-Security-Group"
@@ -29,10 +29,10 @@ resource "aws_db_parameter_group" "custom_pg" {
   family = "postgres16"
   name   = "csye6225-pg"
 
- parameter {
-   name = "rds.force_ssl"
+  parameter {
+    name  = "rds.force_ssl"
     value = "0"
- }
+  }
   parameter {
     name  = "log_connections"
     value = "1"
@@ -40,7 +40,7 @@ resource "aws_db_parameter_group" "custom_pg" {
 }
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "rds-private-subnet-group"
-  subnet_ids = aws_subnet.private_subnet[*].id  
+  subnet_ids = aws_subnet.private_subnet[*].id
 
   tags = {
     Name = "RDS Private Subnet Group"
@@ -48,20 +48,20 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 }
 # PostgreSQL RDS instance
 resource "aws_db_instance" "postgres_rds" {
-  identifier           = var.identifier
-  allocated_storage    = 20
-  engine               = "postgres"
-  engine_version       = "16.3"
-  instance_class       = var.db_instance_class
-  db_name              = var.db_name
-  username             = var.username
-  password             = var.db_password
-  parameter_group_name = aws_db_parameter_group.custom_pg.name
-  vpc_security_group_ids = [aws_security_group.database_sg.id] 
-  db_subnet_group_name = aws_db_subnet_group.rds_subnet_group.name
-  multi_az = false
-  publicly_accessible = false
-  skip_final_snapshot = true
+  identifier             = var.identifier
+  allocated_storage      = 20
+  engine                 = "postgres"
+  engine_version         = "16.3"
+  instance_class         = var.db_instance_class
+  db_name                = var.db_name
+  username               = var.username
+  password               = var.db_password
+  parameter_group_name   = aws_db_parameter_group.custom_pg.name
+  vpc_security_group_ids = [aws_security_group.database_sg.id]
+  db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
+  multi_az               = false
+  publicly_accessible    = false
+  skip_final_snapshot    = true
 
   tags = {
     Name = "CSYE6225-RDS"
