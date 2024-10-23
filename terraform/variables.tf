@@ -33,3 +33,35 @@ variable "instance_type" {
   description = "Instance type for the EC2 instances"
   type        = string
 }
+
+#DataBase Key Name
+variable "key_name" {
+  description = "Name of the EC2 key pair"
+  type        = string
+}
+
+variable "identifier" {
+  description = "Identifier for the RDS database"
+  type        = string
+}
+variable "db_instance_class" {
+  description = "Instance class for the RDS database"
+  type        = string
+}
+
+variable "db_name" {
+  description = "Name of the database"
+  type        = string
+}
+
+variable "username" {
+  description = "Username"
+  type        = string
+}
+
+variable "db_password" {
+  description = "Password"
+  type        = string
+}
+
+
