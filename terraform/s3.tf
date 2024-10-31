@@ -1,0 +1,44 @@
+# Generate UUID for S3 bucket name
+resource "random_uuid" "bucket_uuid" {}
+
+# Create a private S3 bucket with unique UUID name and forced deletion
+resource "aws_s3_bucket" "csye6225_bucket" {
+  bucket        = random_uuid.bucket_uuid.result
+  force_destroy = true
+}
+
+# Block public access to the S3 bucket
+resource "aws_s3_bucket_public_access_block" "blocking_public_access" {
+  bucket = aws_s3_bucket.csye6225_bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# Apply default encryption (AES256) for the S3 bucket
+resource "aws_s3_bucket_server_side_encryption_configuration" "sse_config" {
+  bucket = aws_s3_bucket.csye6225_bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+# S3 Bucket Lifecycle Policy to transition objects to STANDARD_IA
+resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_policy" {
+  bucket = aws_s3_bucket.csye6225_bucket.id
+
+  rule {
+    id     = "transition-to-ia"
+    status = "Enabled"
+
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+  }
+}
