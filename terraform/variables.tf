@@ -64,4 +64,22 @@ variable "db_password" {
   type        = string
 }
 
+variable "domain_name" {
+  description = "Domain name for the Route 53 record"
+  type        = string
+}
 
+variable "log_group_name" {
+  description = "Name of the CloudWatch Logs log group"
+  type        = string
+}
+
+variable "log_stream_name" {
+  description = "Name of the CloudWatch Logs log stream"
+  type        = string
+}
+
+variable "metrics_namespace" {
+  description = "Namespace for the CloudWatch Metrics"
+  type        = string
+}

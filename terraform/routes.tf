@@ -33,3 +33,11 @@ resource "aws_route_table_association" "private_association" {
   subnet_id      = aws_subnet.private_subnet[count.index].id
   route_table_id = aws_route_table.private_rt.id
 }
+
+# resource "aws_route53_record" "a_record" {
+#   zone_id = aws_route53_zone.my_zone.zone_id
+#   name     = "dev.${var.domain_name}"
+#   type     = "A"
+#   ttl      = 300
+#   records  = [aws_instance.my_instance.public_ip]
+# }
