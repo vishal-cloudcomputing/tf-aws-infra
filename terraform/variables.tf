@@ -83,3 +83,29 @@ variable "metrics_namespace" {
   description = "Namespace for the CloudWatch Metrics"
   type        = string
 }
+
+variable "desired_capacity" {
+  description = "Desired capacity for the Auto Scaling group"
+  type        = number
+}
+
+variable "max_size" {
+  description = "Maximum size for the Auto Scaling group"
+  type        = number
+}
+
+variable "min_size" {
+  description = "Minimum size for the Auto Scaling group"
+  type        = number
+}
+
+variable "scaleup_threshold" {
+  description = "Threshold for scaling up"
+  type        = number
+  
+}
+
+variable "scaledown_threshold" {
+  description = "Threshold for scaling down"
+  type        = number
+}

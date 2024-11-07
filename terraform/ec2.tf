@@ -1,61 +1,22 @@
-# Application Security Group
-resource "aws_security_group" "application_sg" {
-  name        = "application-security-group"
-  description = "Security group for web applications"
-  vpc_id      = aws_vpc.my_vpc.id
+resource "aws_launch_template" "csye6225_asg" {
+  name          = "csye6225_asg"
+  image_id      = var.ami_id
+  instance_type = var.instance_type
+  key_name      = var.key_name
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  # Network interfaces block with security group reference by ID
+  network_interfaces {
+    associate_public_ip_address = true
+    security_groups             = [aws_security_group.application_sg.id]
   }
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  # IAM instance profile configuration
+  iam_instance_profile {
+    name = aws_iam_instance_profile.CSYE6225-profile.name
   }
 
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# EC2 Instance
-resource "aws_instance" "web_app_instance" {
-  ami                    = var.ami_id
-  instance_type          = var.instance_type
-  subnet_id              = aws_subnet.public_subnet[0].id
-  vpc_security_group_ids = [aws_security_group.application_sg.id]
-  key_name               = var.key_name
-  iam_instance_profile   = aws_iam_instance_profile.CSYE6225-profile.name
-
-  root_block_device {
-    volume_size           = 25
-    volume_type           = "gp2"
-    delete_on_termination = true
-  }
-
-  user_data = <<EOF
+  # Base64 encoding of the user data script
+  user_data = base64encode(<<EOF
 #!/bin/bash
 LOG_FILE="/home/csye6225/user-data-log.txt"
 
@@ -106,7 +67,20 @@ sudo tee /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json > /de
       "statsd": {
         "service_address": ":8125",
         "metrics_collection_interval": 10
-      }
+      },
+      "cpu": {
+              "measurement": ["cpu_usage_idle", "cpu_usage_user", "cpu_usage_system"],
+               "metrics_collection_interval": 60
+             },
+             "disk": {
+               "measurement": ["used_percent"],
+               "metrics_collection_interval": 60,
+               "resources": ["*"]
+            },
+             "mem": {
+               "measurement": ["mem_used_percent"],
+               "metrics_collection_interval": 60
+          }
     }
   }
 }
@@ -120,12 +94,13 @@ sudo systemctl status amazon-cloudwatch-agent >> $LOG_FILE 2>&1
 
 echo "User data script completed." >> $LOG_FILE
 EOF
+  )
 
   lifecycle {
     prevent_destroy = false
   }
 
   tags = {
-    Name = "Web-App-Instance"
+    Name = "Web-App-LaunchTemplate"
   }
 }
