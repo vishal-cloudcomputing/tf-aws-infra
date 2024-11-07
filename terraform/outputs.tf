@@ -23,17 +23,19 @@ output "application_security_group_id" {
   value       = aws_security_group.application_sg.id
 }
 
-output "web_app_instance_id" {
-  description = "The ID of the web application EC2 instance"
-  value       = aws_instance.web_app_instance.id
+# output "web_app_instance_id" {
+#   description = "The ID of the web application EC2 instance"
+#   value       = aws_instance.web_app_instance.id
+# }
+
+# Output for Load Balancer's DNS Name (for public access)
+output "web_app_lb_dns_name" {
+  description = "The DNS name of the web application Load Balancer"
+  value       = aws_lb.web_app_lb.dns_name
 }
 
-output "web_app_instance_public_ip" {
-  description = "The public IP address of the web application EC2 instance"
-  value       = aws_instance.web_app_instance.public_ip
-}
-
-output "web_app_instance_private_ip" {
-  description = "The private IP address of the web application EC2 instance"
-  value       = aws_instance.web_app_instance.private_ip
-}
+# Output for Private IPs of EC2 instances in Auto Scaling Group (requires use of data sources or instances)
+# output "web_app_instance_private_ips" {
+#   description = "The private IP addresses of EC2 instances in the Auto Scaling group"
+#   value       = aws_autoscaling_group.web_app_asg.instances[*].private_ip
+# }
