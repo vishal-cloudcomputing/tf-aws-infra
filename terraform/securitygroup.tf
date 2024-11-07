@@ -4,11 +4,11 @@ resource "aws_security_group" "application_sg" {
   vpc_id      = aws_vpc.my_vpc.id
 
   # Allow SSH access (port 22) only for management/administration
- ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    security_groups = [aws_security_group.lb_sg.id]  # Restrict traffic to ALB security group
+  ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.lb_sg.id] # Restrict traffic to ALB security group
   }
 
   # Allow traffic on port 8080 ONLY from the load balancer's security group

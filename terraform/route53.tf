@@ -6,7 +6,7 @@ data "aws_route53_zone" "primary" {
 # Route 53 A Record for dev subdomain (pointing to the Load Balancer)
 resource "aws_route53_record" "subdomain_a_record" {
   zone_id = data.aws_route53_zone.primary.zone_id
-  name    = "${var.domain_name}" # Points to dev subdomain
+  name    = var.domain_name # Points to dev subdomain
   type    = "A"
 
   # Alias pointing to the ALB

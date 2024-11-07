@@ -102,7 +102,7 @@ variable "min_size" {
 variable "scaleup_threshold" {
   description = "Threshold for scaling up"
   type        = number
-  
+
 }
 
 variable "scaledown_threshold" {
