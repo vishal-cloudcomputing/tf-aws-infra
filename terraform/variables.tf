@@ -109,3 +109,49 @@ variable "scaledown_threshold" {
   description = "Threshold for scaling down"
   type        = number
 }
+
+variable "lambda_function_name" {
+  description = "Name of the Lambda function"
+  type        = string
+}
+
+variable "lambda_function_handler" {
+  description = "Handler for the Lambda function"
+  type        = string
+}
+
+variable "lambda_function_runtime" {
+  description = "Runtime for the Lambda function"
+  type        = string
+}
+
+variable "lambda_file_path" {
+  description = "Path to the Lambda function code"
+  type        = string
+}
+
+variable "mailgun_api_key" {
+  description = "Mailgun API key"
+  type        = string
+}
+
+variable "mailgun_domain" {
+  description = "Mailgun domain"
+  type        = string
+}
+
+variable "mailgun_from_address" {
+  description = "Mailgun from address"
+  type        = string
+}
+
+variable "sns_topic_name" {
+  description = "Name of the SNS topic"
+  type        = string
+
+}
+
+variable "sns_topic_display_name" {
+  description = "Display name of the SNS topic"
+  type        = string
+}
