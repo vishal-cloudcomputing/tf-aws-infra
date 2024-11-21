@@ -31,8 +31,11 @@ echo DB_USERNAME="${aws_db_instance.postgres_rds.username}" >> .env
 echo DB_PASSWORD="${var.db_password}" >> .env
 echo DB_NAME="${aws_db_instance.postgres_rds.db_name}" >> .env
 echo AWS_Bucket_Name="${aws_s3_bucket.csye6225_bucket.bucket}" >> .env
-echo AWS_Region="${var.aws_region}" >> .env
+echo AWS_REGION="${var.aws_region}" >> .env
 echo PORT="8080" >> .env
+echo AWS_SNS_TOPIC_ARN = "${aws_sns_topic.email_verification.arn}" >> .env
+echo SENDING_API_KEY = "${var.mailgun_api_key}" >> .env
+echo DOMIN_NAME = "${var.mailgun_domain}" >> .env
 
 # Restart application service
 echo "Setting permissions and starting application service..." >> $LOG_FILE

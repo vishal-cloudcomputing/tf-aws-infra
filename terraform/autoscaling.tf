@@ -43,10 +43,10 @@ resource "aws_autoscaling_policy" "scale_down" {
 resource "aws_cloudwatch_metric_alarm" "scale_up" {
   alarm_name          = "scale_up_alarm"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = 1
   metric_name         = "CPUUtilization"
   namespace           = "AWS/EC2"
-  period              = "60"
+  period              = 60
   statistic           = "Average"
   threshold           = var.scaleup_threshold
   alarm_description   = "Alarm when CPU exceeds 10%"
@@ -60,10 +60,10 @@ resource "aws_cloudwatch_metric_alarm" "scale_up" {
 resource "aws_cloudwatch_metric_alarm" "scale_down" {
   alarm_name          = "scale_down_alarm"
   comparison_operator = "LessThanThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = 1
   metric_name         = "CPUUtilization"
   namespace           = "AWS/EC2"
-  period              = "60"
+  period              = 60
   statistic           = "Average"
   threshold           = var.scaledown_threshold
   alarm_description   = "Alarm when CPU is below 7%"
