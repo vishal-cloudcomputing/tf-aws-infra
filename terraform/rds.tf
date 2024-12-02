@@ -62,6 +62,8 @@ resource "aws_db_instance" "postgres_rds" {
   multi_az               = false
   publicly_accessible    = false
   skip_final_snapshot    = true
+  storage_encrypted      = true
+  kms_key_id             = aws_kms_key.rds_key.arn
 
   tags = {
     Name = "CSYE6225-RDS"
