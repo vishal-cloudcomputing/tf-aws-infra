@@ -155,3 +155,4 @@ variable "sns_topic_display_name" {
   description = "Display name of the SNS topic"
   type        = string
 }
+

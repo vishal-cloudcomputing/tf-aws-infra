@@ -5,6 +5,7 @@ resource "random_uuid" "bucket_uuid" {}
 resource "aws_s3_bucket" "csye6225_bucket" {
   bucket        = random_uuid.bucket_uuid.result
   force_destroy = true
+
 }
 
 # Block public access to the S3 bucket
@@ -23,7 +24,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "sse_config" {
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+      sse_algorithm     = "aws:kms"                 # Use KMS encryption instead of AES256
+      kms_master_key_id = aws_kms_key.s3_key.key_id # Reference the KMS key
     }
   }
 }

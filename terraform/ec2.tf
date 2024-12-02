@@ -4,6 +4,18 @@ resource "aws_launch_template" "csye6225_asg" {
   instance_type = var.instance_type
   key_name      = var.key_name
 
+  # Root volume configuration
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      volume_size           = 8
+      volume_type           = "gp2"
+      delete_on_termination = true
+      encrypted             = true
+      kms_key_id            = aws_kms_key.ec2_key.arn
+    }
+  }
+
   # Network interfaces block with security group reference by ID
   network_interfaces {
     associate_public_ip_address = true
@@ -28,7 +40,9 @@ touch .env
 echo DB_HOST="${aws_db_instance.postgres_rds.address}" >> .env
 echo DB_PORT="5432" >> .env
 echo DB_USERNAME="${aws_db_instance.postgres_rds.username}" >> .env
-echo DB_PASSWORD="${var.db_password}" >> .env
+DB_PASSWORD=$(aws secretsmanager get-secret-value --secret-id database-password --query SecretString --output text)
+DB_PASSWORD=$(echo $DB_PASSWORD | jq -r .)
+echo "DB_PASSWORD=$DB_PASSWORD" >> /etc/environment
 echo DB_NAME="${aws_db_instance.postgres_rds.db_name}" >> .env
 echo AWS_Bucket_Name="${aws_s3_bucket.csye6225_bucket.bucket}" >> .env
 echo AWS_REGION="${var.aws_region}" >> .env
@@ -36,13 +50,10 @@ echo PORT="8080" >> .env
 echo AWS_SNS_TOPIC_ARN = "${aws_sns_topic.email_verification.arn}" >> .env
 echo SENDING_API_KEY = "${var.mailgun_api_key}" >> .env
 echo DOMIN_NAME = "${var.mailgun_domain}" >> .env
-
-# Restart application service
 echo "Setting permissions and starting application service..." >> $LOG_FILE
 sudo systemctl enable my_app_service.service >> $LOG_FILE 2>&1
 sudo systemctl start my_app_service.service >> $LOG_FILE 2>&1
 
-# Configure CloudWatch Agent
 sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc
 sudo tee /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json > /dev/null << 'EOT'
 {
@@ -72,18 +83,18 @@ sudo tee /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json > /de
         "metrics_collection_interval": 10
       },
       "cpu": {
-              "measurement": ["cpu_usage_idle", "cpu_usage_user", "cpu_usage_system"],
-               "metrics_collection_interval": 60
-             },
-             "disk": {
-               "measurement": ["used_percent"],
-               "metrics_collection_interval": 60,
-               "resources": ["*"]
-            },
-             "mem": {
-               "measurement": ["mem_used_percent"],
-               "metrics_collection_interval": 60
-          }
+        "measurement": ["cpu_usage_idle", "cpu_usage_user", "cpu_usage_system"],
+        "metrics_collection_interval": 60
+      },
+      "disk": {
+        "measurement": ["used_percent"],
+        "metrics_collection_interval": 60,
+        "resources": ["*"]
+      },
+      "mem": {
+        "measurement": ["mem_used_percent"],
+        "metrics_collection_interval": 60
+      }
     }
   }
 }
@@ -92,7 +103,6 @@ EOT
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 sudo systemctl restart amazon-cloudwatch-agent
 
-# Check the status of the CloudWatch Agent  
 sudo systemctl status amazon-cloudwatch-agent >> $LOG_FILE 2>&1
 
 echo "User data script completed." >> $LOG_FILE
