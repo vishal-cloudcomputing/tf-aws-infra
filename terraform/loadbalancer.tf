@@ -23,7 +23,7 @@ resource "aws_lb" "web_app_lb" {
 resource "aws_lb_target_group" "web_app_target_group" {
   name     = "web-app-target-group"
   port     = 8080 # Port your app listens to
-  protocol = "HTTP"
+  protocol = "HTTPS"
   vpc_id   = aws_vpc.my_vpc.id
 
   health_check {
